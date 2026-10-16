@@ -35,3 +35,5 @@ Review the repo against AGENTS.md. List violations only (cross-feature imports, 
 - One screen per session keeps context small and output accurate.
 - Paste the exact RFP section number when a feature depends on it.
 - If output drifts, reply: "Re-read AGENTS.md and docs/00_START_HERE.md, then redo only <file>."
+
+

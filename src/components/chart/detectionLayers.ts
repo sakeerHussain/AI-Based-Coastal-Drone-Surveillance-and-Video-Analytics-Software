@@ -1,5 +1,5 @@
 import type { LayerSpecification } from 'maplibre-gl'
-import type { ChartTokens } from '../../../lib/themeTokens'
+import type { ChartTokens } from '../../lib/themeTokens'
 
 export function detectionLayers(tokens: ChartTokens): LayerSpecification[] {
   return [{

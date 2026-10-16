@@ -1,9 +1,9 @@
 import type { ExpressionSpecification, LayerSpecification } from 'maplibre-gl'
-import type { ChartTokens } from '../../../lib/themeTokens'
+import type { ChartTokens } from '../../lib/themeTokens'
 
 export function zoneLayers(tokens: ChartTokens): LayerSpecification[] {
   const colour: ExpressionSpecification = [
-    'match', ['get', 'id'], 'Z-04', tokens.red, 'Z-02', tokens.amber, 'Z-07', tokens.sea, tokens.sea,
+    'match', ['get', 'tone'], 'red', tokens.red, 'amber', tokens.amber, 'sea', tokens.sea, tokens.sea,
   ]
   return [
     { id: 'zone-surface', type: 'fill', source: 'zones',

@@ -1,43 +1,13 @@
-import { useEffect, useRef, useState } from 'react'
-import { Map, setWorkerUrl } from 'maplibre-gl'
-import workerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url'
-import 'maplibre-gl/dist/maplibre-gl.css'
-import { chartBounds } from '../../../mocks/watch-floor/chart'
-import { chartStyle } from '../layers/chartStyle'
+import { useEffect } from 'react'
+import { useSearchParams } from 'react-router-dom'
+import type { Map } from 'maplibre-gl'
 import { drones } from '../../../mocks/watch-floor/drones'
 import { useWatchFloorStore } from '../store/useWatchFloorStore'
 
-export function useWatchFloorMap() {
-  const container = useRef<HTMLDivElement>(null)
-  const [map, setMap] = useState<Map | null>(null)
-  const [error, setError] = useState(false)
-  useEffect(() => {
-    if (!container.current) return
-    setWorkerUrl(workerUrl)
-    let instance: Map
-    try {
-      instance = new Map({
-        container: container.current, style: chartStyle(), bounds: chartBounds,
-        fitBoundsOptions: { padding: 80 },
-        attributionControl: false, dragRotate: false, pitchWithRotate: false,
-      })
-    } catch {
-      const timer = setTimeout(() => setError(true), 0)
-      return () => clearTimeout(timer)
-    }
-    instance.getCanvas().setAttribute('aria-label', 'Kochi coastal chart. Use arrow keys to pan and plus or minus to zoom.')
-    instance.getCanvas().classList.add('focus-visible:outline-2', 'focus-visible:-outline-offset-2', 'focus-visible:outline-sea')
-    instance.on('load', () => {
-      instance.fitBounds(chartBounds, { padding: 80, duration: 0 })
-      setMap(instance)
-    })
-    instance.on('error', () => setError(true))
-    const observer = new ResizeObserver(() => {
-      instance.resize()
-    })
-    observer.observe(container.current)
-    return () => { observer.disconnect(); instance.remove() }
-  }, [])
+export function useWatchFloorMap(map: Map | null) {
+  const [searchParams] = useSearchParams()
+  const requestedDroneId = searchParams.get('drone')
+  const showTrack = searchParams.get('track') === '1'
   useEffect(() => {
     if (!map) return
     return useWatchFloorStore.subscribe((state, previous) => {
@@ -49,5 +19,14 @@ export function useWatchFloorMap() {
       })
     })
   }, [map])
-  return { container, map, error }
+  useEffect(() => {
+    if (!map || !requestedDroneId) return
+    const drone = drones.find((item) => item.id === requestedDroneId)
+    if (!drone) return
+    const state = useWatchFloorStore.getState()
+    state.selectDrone(drone.id)
+    if (showTrack && !state.layers.tracks) state.toggleLayer('tracks')
+    map.stop()
+    map.jumpTo({ center: drone.position })
+  }, [map, requestedDroneId, showTrack])
 }

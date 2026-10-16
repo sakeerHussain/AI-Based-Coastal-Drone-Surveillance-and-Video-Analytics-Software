@@ -1,5 +1,5 @@
 import { Marker, type Map, type PositionAnchor } from 'maplibre-gl'
-import { readChartTokens } from '../../../lib/themeTokens'
+import { readChartTokens } from '../../lib/themeTokens'
 
 export interface MapLabel {
   text: string

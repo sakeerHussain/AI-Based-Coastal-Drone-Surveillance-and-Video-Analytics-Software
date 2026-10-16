@@ -2,7 +2,7 @@ import { createBrowserRouter, Navigate } from 'react-router-dom'
 import { SignInPage } from '../features/auth'
 import { WatchFloorPage } from '../features/watch-floor'
 import { FeedWallPage } from '../features/feed-wall'
-import { IncidentReviewPage } from '../features/incidents'
+import { IncidentListPage, IncidentReviewPage } from '../features/incidents'
 import { ZonesAndRulesPage } from '../features/zones-rules'
 import { ModelsAndHealthPage } from '../features/models'
 import { AppShell } from './layout/AppShell'
@@ -16,7 +16,8 @@ export const router = createBrowserRouter([
     children: [
       { path: '/watch-floor', element: <RequirePermission action="view:watch-floor"><WatchFloorPage /></RequirePermission> },
       { path: '/feed-wall', element: <RequirePermission action="view:feed-wall"><FeedWallPage /></RequirePermission> },
-      { path: '/incidents', element: <RequirePermission action="view:incidents"><IncidentReviewPage /></RequirePermission> },
+      { path: '/incidents', element: <RequirePermission action="view:incidents"><IncidentListPage /></RequirePermission> },
+      { path: '/incidents/:id', element: <RequirePermission action="view:incidents"><IncidentReviewPage /></RequirePermission> },
       { path: '/zones-rules', element: <RequirePermission action="view:zones-rules"><ZonesAndRulesPage /></RequirePermission> },
       { path: '/models', element: <RequirePermission action="view:models"><ModelsAndHealthPage /></RequirePermission> },
     ],

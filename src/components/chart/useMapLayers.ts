@@ -1,9 +1,8 @@
 import { useEffect } from 'react'
 import type { Map } from 'maplibre-gl'
-import { useWatchFloorStore } from '../store/useWatchFloorStore'
+import type { LayerVisibility } from './types'
 
-export function useMapLayers(map: Map | null) {
-  const layers = useWatchFloorStore((state) => state.layers)
+export function useMapLayers(map: Map | null, layers: LayerVisibility) {
   useEffect(() => {
     if (!map) return
     for (const [id, visible] of [

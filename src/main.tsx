@@ -3,7 +3,9 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.tsx'
 import { Providers } from './app/providers'
+import { startMocks } from './mocks/browser'
 
+await startMocks()
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <Providers>

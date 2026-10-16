@@ -1,11 +1,11 @@
 import type { StyleSpecification } from 'maplibre-gl'
-import { land, coastline, flightTracks, detections } from '../../../mocks/watch-floor/chart'
-import { zones } from '../../../mocks/watch-floor/zones'
-import { readChartTokens } from '../../../lib/themeTokens'
+import type { ChartData } from './types'
+import { readChartTokens } from '../../lib/themeTokens'
 import { zoneLayers } from './zoneLayers'
 import { detectionLayers } from './detectionLayers'
 
-export function chartStyle(): StyleSpecification {
+export function chartStyle(data: ChartData): StyleSpecification {
+  const { land, coastline, flightTracks, detections, zones } = data
   const tokens = readChartTokens()
   return {
     version: 8,

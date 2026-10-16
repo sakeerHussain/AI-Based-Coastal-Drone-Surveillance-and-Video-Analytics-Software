@@ -1,16 +1,14 @@
 import { useEffect } from 'react'
 import { Marker, type Map } from 'maplibre-gl'
-import { drones } from '../../../mocks/watch-floor/drones'
-import { places } from '../../../mocks/watch-floor/chart'
-import { zoneLabels } from '../../../mocks/watch-floor/zones'
-import { useWatchFloorStore } from '../store/useWatchFloorStore'
-import { addMapLabels, type MapLabel } from '../layers/mapLabels'
+import type { ChartData, ChartMapProps, LayerVisibility } from './types'
+import { addMapLabels, type MapLabel } from './mapLabels'
 
 const tones = { red: 'text-red', amber: 'text-amber', sea: 'text-sea' }
-export function useMapMarkers(map: Map | null) {
-  const selected = useWatchFloorStore((state) => state.selectedDroneId)
-  const layers = useWatchFloorStore((state) => state.layers)
-  const alerts = useWatchFloorStore((state) => state.alerts)
+export function useMapMarkers(
+  map: Map | null, data: ChartData, selected: string | undefined,
+  layers: LayerVisibility, alerts: ChartMapProps['alerts'],
+) {
+  const { drones, places, zoneLabels } = data
   useEffect(() => {
     if (!map) return
     map.setLayoutProperty('zone-surface', 'visibility', layers.zones ? 'visible' : 'none')
@@ -52,5 +50,5 @@ export function useMapMarkers(map: Map | null) {
       }
     }
     return () => { removeLabels(); markers.forEach((marker) => marker.remove()) }
-  }, [map, selected, layers.zones, layers.detections, alerts])
+  }, [map, selected, layers.zones, layers.detections, alerts, drones, places, zoneLabels])
 }
