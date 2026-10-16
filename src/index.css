@@ -1,0 +1,23 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Hanken Grotesk", system-ui, sans-serif;
+
+  --color-paper: #F1F4F2;
+  --color-panel: #FFFFFF;
+  --color-ink: #10283A;
+  --color-mute: #5B7080;
+  --color-line: #D3DDDD;
+  --color-shoal: #CFE3E6;
+  --color-sea: #1F5C73;
+  --color-land: #E7E2D0;
+  --color-red: #C9382C;
+  --color-amber: #C98F0E;
+  --color-green: #2E8B6A;
+}
+
+body {
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-variant-numeric: tabular-nums;
+}
