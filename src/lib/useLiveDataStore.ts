@@ -1,0 +1,15 @@
+import { create } from 'zustand'
+import type { LiveEvent, SystemHealth, Telemetry } from './liveDataTypes'
+
+interface LiveDataState {
+  telemetry: Record<string, Telemetry>
+  health: SystemHealth | null
+  receive: (event: LiveEvent) => void
+}
+export const useLiveDataStore = create<LiveDataState>((set) => ({
+  telemetry: {}, health: null,
+  receive: (event) => {
+    if (event.type === 'snapshot' || event.type === 'health') set({ health: event.health })
+    if (event.type === 'snapshot' || event.type === 'telemetry') set({ telemetry: event.telemetry })
+  },
+}))

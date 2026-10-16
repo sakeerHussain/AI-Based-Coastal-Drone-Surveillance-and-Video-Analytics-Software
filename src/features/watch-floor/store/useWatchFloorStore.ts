@@ -23,6 +23,7 @@ export const useWatchFloorStore = create<WatchFloorState>((set) => ({
   receive: (event) => set((state) => {
     if (event.type === 'snapshot') return { alerts: event.alerts, telemetry: event.telemetry }
     if (event.type === 'telemetry') return { telemetry: event.telemetry }
+    if (event.type !== 'alert') return state
     if (state.alerts.some((alert) => alert.id === event.alert.id)) return state
     return { alerts: [event.alert, ...state.alerts], toast: event.alert.severity === 'high' ? event.alert : state.toast }
   }),
