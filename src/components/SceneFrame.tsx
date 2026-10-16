@@ -24,8 +24,8 @@ export function SceneFrame({ scene }: { scene: SceneData }) {
             <rect x={object.x} y={object.y} width={object.width} height={object.height}
               fill="none" stroke="currentColor" strokeWidth="1.2" />
             <rect x={object.x} y={object.y - 9} width={object.label.length * 3.7 + 6}
-              height="9" fill="currentColor" />
-            <text x={object.x + 3} y={object.y - 2} fontSize="6.5" fontWeight="600" className="fill-panel">
+              height="9" className="fill-panel" stroke="currentColor" strokeWidth="0.5" />
+            <text x={object.x + 3} y={object.y - 2} fontSize="6.5" fontWeight="600" className="fill-ink">
               {object.label}
             </text>
           </g>

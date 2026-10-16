@@ -1,24 +1,32 @@
 import { create } from 'zustand'
 import { currentTime } from '../../../lib/time'
-import { incidentRecords } from '../../../mocks/incidents/records'
-import { incidentActions } from '../../../mocks/incidents/actions'
-import type { ActionRecord, IncidentAction } from '../types'
+import type { ActionRecord, IncidentAction, IncidentsData } from '../types'
 
 interface IncidentsState {
   history: Record<string, ActionRecord[]>
   acknowledged: Record<string, boolean>
   toast: { id: string; text: string } | null
+  loaded: boolean
+  data: IncidentsData | null
+  hydrate: (data: IncidentsData) => void
+  reset: () => void
   recordAction: (incidentId: string, action: IncidentAction, person: string) => boolean
   dismissToast: () => void
 }
-export const useIncidentsStore = create<IncidentsState>((set) => ({
-  history: Object.fromEntries(Object.values(incidentRecords).map((incident) => [incident.id, incident.initialActions])),
-  acknowledged: {}, toast: null,
+export const useIncidentsStore = create<IncidentsState>((set, get) => ({
+  history: {}, acknowledged: {}, toast: null, data: null, loaded: false,
+  hydrate: (data) => {
+    if (get().loaded) return
+    set({ data, loaded: true, history: Object.fromEntries(Object.values(data.records)
+      .map((incident) => [incident.id, structuredClone(incident.initialActions)])) })
+  },
+  reset: () => set({ history: {}, acknowledged: {}, toast: null, data: null, loaded: false }),
   dismissToast: () => set({ toast: null }),
   recordAction: (incidentId, action, person) => {
-    if (!Object.hasOwn(incidentRecords, incidentId) || !person.trim()) return false
-    const incident = incidentRecords[incidentId]
-    const definition = incidentActions.find((item) => item.id === action)
+    const data = get().data
+    if (!data || !Object.hasOwn(data.records, incidentId) || !person.trim()) return false
+    const incident = data.records[incidentId]
+    const definition = data.actions.find((item) => item.id === action)
     if (!definition) return false
     let accepted = false
     set((state) => {

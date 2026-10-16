@@ -1,8 +1,9 @@
-import { drones } from '../../../mocks/watch-floor/drones'
+import { useSurveillanceData } from '../../../lib/useSurveillanceData'
 import { useWatchFloorStore } from '../store/useWatchFloorStore'
 
 const focus = 'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sea'
 export function ChartControls() {
+  const { data } = useSurveillanceData()
   const selected = useWatchFloorStore((state) => state.selectedDroneId)
   const selectDrone = useWatchFloorStore((state) => state.selectDrone)
   const layers = useWatchFloorStore((state) => state.layers)
@@ -10,7 +11,7 @@ export function ChartControls() {
   return (
     <div className="pointer-events-none absolute inset-x-3 top-3 flex flex-wrap items-start justify-between gap-3">
       <div className="pointer-events-auto flex flex-wrap gap-2 text-sm" aria-label="Select drone">
-        {drones.map((drone) => (
+        {data?.drones.map((drone) => (
           <button key={drone.id} type="button" aria-pressed={selected === drone.id}
             onClick={() => selectDrone(drone.id)}
             className={`rounded border border-line px-3 py-1.5 ${focus} ${selected === drone.id ? 'bg-ink text-paper' : 'bg-panel text-ink'}`}>

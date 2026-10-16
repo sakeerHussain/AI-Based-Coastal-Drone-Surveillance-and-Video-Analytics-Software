@@ -1,6 +1,7 @@
 import { useAuthStore } from '../../features/auth'
 import { shellFixture } from '../../mocks/shell'
 import { useIstClock } from './useIstClock'
+import { ResetDemoControl } from './ResetDemoControl'
 
 export function TopBar() {
   const user = useAuthStore((state) => state.user)
@@ -20,6 +21,7 @@ export function TopBar() {
           {roleLabel}: {user.name}
         </span>
       )}
+      <ResetDemoControl />
     </header>
   )
 }

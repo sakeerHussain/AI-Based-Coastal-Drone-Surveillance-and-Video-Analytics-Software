@@ -1,14 +1,15 @@
 import { SceneFrame } from '../../../components/SceneFrame'
-import { drones } from '../../../mocks/watch-floor/drones'
-import { scenes } from '../../../mocks/watch-floor/scenes'
+import { useSurveillanceData } from '../../../lib/useSurveillanceData'
 import { useWatchFloorStore } from '../store/useWatchFloorStore'
 
 export function LiveFeedPanel() {
   const selected = useWatchFloorStore((state) => state.selectedDroneId)
-  const drone = drones.find((item) => item.id === selected)!
+  const { data } = useSurveillanceData()
+  const drone = data?.drones.find((item) => item.id === selected)
+  if (!data || !drone) return <p role="status" className="p-4 text-sm text-mute">Waiting for the selected feed…</p>
   return (
     <section aria-label="Selected drone live feed" className="relative aspect-video shrink-0 overflow-hidden bg-ink">
-      <SceneFrame scene={scenes[selected]} />
+      <SceneFrame scene={data.scenes[selected]} />
       <div className="absolute top-2 left-2 rounded bg-ink/70 px-2 py-0.5 text-[11px] font-semibold text-panel">
         {drone.id} {drone.location}, live
       </div>

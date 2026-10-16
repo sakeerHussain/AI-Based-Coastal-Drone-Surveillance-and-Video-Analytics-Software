@@ -7,8 +7,9 @@ import { ZonesAndRulesPage } from '../features/zones-rules'
 import { ModelsAndHealthPage } from '../features/models'
 import { AppShell } from './layout/AppShell'
 import { RequirePermission } from './layout/RequirePermission'
+import { DemoLayout } from './demo/DemoLayout'
 
-export const router = createBrowserRouter([
+export const router = createBrowserRouter([{ element: <DemoLayout />, children: [
   { path: '/', element: <Navigate to="/sign-in" replace /> },
   { path: '/sign-in', element: <SignInPage /> },
   {
@@ -22,4 +23,4 @@ export const router = createBrowserRouter([
       { path: '/models', element: <RequirePermission action="view:models"><ModelsAndHealthPage /></RequirePermission> },
     ],
   },
-])
+] }])

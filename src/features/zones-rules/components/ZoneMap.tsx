@@ -1,8 +1,7 @@
 import { useEffect, useMemo } from 'react'
 import type { Map } from 'maplibre-gl'
 import { ChartMap, type ChartData } from '../../../components/chart'
-import { chartBounds, land, coastline, flightTracks, detections, places } from '../../../mocks/watch-floor/chart'
-import { drones } from '../../../mocks/watch-floor/drones'
+import { useSurveillanceData } from '../../../lib/useSurveillanceData'
 import { zoneFeatures, useZoneCorners } from '../hooks/useZoneCorners'
 import type { useZoneDrawing } from '../hooks/useZoneDrawing'
 import { useZonesRulesStore } from '../store/useZonesRulesStore'
@@ -16,13 +15,14 @@ interface Props {
   drawing: ReturnType<typeof useZoneDrawing>
 }
 export function ZoneMap({ zones, zone, map, onReady, drawing }: Props) {
-  const data = useMemo<ChartData>(() => ({
-    bounds: chartBounds, land, coastline, flightTracks, detections, places, drones,
+  const query = useSurveillanceData()
+  const data = useMemo<ChartData | null>(() => query.data ? ({
+    ...query.data.chart,
     zones: zoneFeatures(zones), zoneLabels: zones.map((item) => ({
       id: item.id, name: item.name, tone: item.tone,
       position: [Math.max(...item.points.map(([lng]) => lng)), Math.max(...item.points.map(([, lat]) => lat))],
     })),
-  }), [zones])
+  }) : null, [zones, query.data])
   useZoneCorners(map, zone, !drawing.drawing)
   const selectedId = zone.id
   useEffect(() => {
@@ -37,7 +37,11 @@ export function ZoneMap({ zones, zone, map, onReady, drawing }: Props) {
     map.setPaintProperty('zone-fill', 'fill-opacity', ['case', ['==', ['get', 'id'], selectedId], 0.18, 0.12])
   }, [map, selectedId])
   return <section aria-label="Zone editing chart" className="relative min-h-[560px] border-b border-line bg-shoal xl:border-r xl:border-b-0">
-    <ChartMap data={data} layers={layers} alerts={alerts} onReady={onReady} />
+    {data && <ChartMap data={data} layers={layers} alerts={alerts} onReady={onReady} />}
+    {query.isError && <p role="alert" className="absolute top-16 left-3 rounded bg-panel p-3 text-sm">
+      Could not load the chart. <button type="button" onClick={() => void query.refetch()}
+        className={`underline ${focus}`}>Try again</button>
+    </p>}
     <div className="absolute inset-x-3 top-3 w-fit max-w-[calc(100%_-_1.5rem)] rounded border border-line bg-panel px-3 py-1.5 text-xs">
       {drawing.drawing ? 'Click points on the chart. Double-click to finish.' : `Editing ${zone.id}. Drag corners to reshape.`}
     </div>

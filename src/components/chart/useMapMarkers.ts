@@ -3,7 +3,7 @@ import { Marker, type Map } from 'maplibre-gl'
 import type { ChartData, ChartMapProps, LayerVisibility } from './types'
 import { addMapLabels, type MapLabel } from './mapLabels'
 
-const tones = { red: 'text-red', amber: 'text-amber', sea: 'text-sea' }
+const tones = { red: 'text-red', amber: 'text-ink', sea: 'text-sea' }
 export function useMapMarkers(
   map: Map | null, data: ChartData, selected: string | undefined,
   layers: LayerVisibility, alerts: ChartMapProps['alerts'],

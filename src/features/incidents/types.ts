@@ -41,3 +41,14 @@ export interface EvidencePack {
   sealedAt: number
   files: EvidenceFile[]
 }
+export interface IncidentActionDefinition {
+  id: IncidentAction
+  label: string
+  record: string
+  includeStation?: boolean
+}
+export interface IncidentsData {
+  records: Record<string, Incident>
+  evidence: Record<string, EvidencePack>
+  actions: IncidentActionDefinition[]
+}

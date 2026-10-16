@@ -1,10 +1,10 @@
 import { useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import type { Map } from 'maplibre-gl'
-import { drones } from '../../../mocks/watch-floor/drones'
+import type { SurveillanceData } from '../../../lib/surveillanceDataTypes'
 import { useWatchFloorStore } from '../store/useWatchFloorStore'
 
-export function useWatchFloorMap(map: Map | null) {
+export function useWatchFloorMap(map: Map | null, drones: SurveillanceData['drones'] = []) {
   const [searchParams] = useSearchParams()
   const requestedDroneId = searchParams.get('drone')
   const showTrack = searchParams.get('track') === '1'
@@ -18,7 +18,7 @@ export function useWatchFloorMap(map: Map | null) {
         center: drone.position, duration: matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 1_000,
       })
     })
-  }, [map])
+  }, [map, drones])
   useEffect(() => {
     if (!map || !requestedDroneId) return
     const drone = drones.find((item) => item.id === requestedDroneId)
@@ -28,5 +28,5 @@ export function useWatchFloorMap(map: Map | null) {
     if (showTrack && !state.layers.tracks) state.toggleLayer('tracks')
     map.stop()
     map.jumpTo({ center: drone.position })
-  }, [map, requestedDroneId, showTrack])
+  }, [map, requestedDroneId, showTrack, drones])
 }

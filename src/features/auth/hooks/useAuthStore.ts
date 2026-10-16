@@ -5,12 +5,14 @@ import type { AuthUser } from '../types'
 
 interface AuthState {
   user: AuthUser | null
-  signIn: (role: Role) => void
+  signIn: (role: Role, policeId?: string) => void
   signOut: () => void
+  reset: () => void
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
-  user: { ...mockUser },
-  signIn: (role) => set({ user: { ...mockUser, role } }),
+  user: null,
+  signIn: (role, policeId = mockUser.policeId) => set({ user: { ...mockUser, policeId, role } }),
   signOut: () => set({ user: null }),
+  reset: () => set({ user: null }),
 }))

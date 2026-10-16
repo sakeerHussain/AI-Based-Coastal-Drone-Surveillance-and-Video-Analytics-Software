@@ -8,7 +8,7 @@ export function AppShell() {
   if (!user) return <Navigate to="/sign-in" replace />
 
   return (
-    <div className="flex h-dvh overflow-hidden bg-paper font-sans text-ink">
+    <div className="flex h-full overflow-hidden bg-paper font-sans text-ink">
       <SideNavigation />
       <div className="flex min-w-0 flex-1 flex-col">
         <TopBar />

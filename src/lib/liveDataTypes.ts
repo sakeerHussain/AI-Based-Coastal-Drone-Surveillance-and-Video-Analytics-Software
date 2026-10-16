@@ -30,4 +30,7 @@ export type LiveEvent =
   | { type: 'alert'; alert: LiveAlert }
 export interface LiveDataClient {
   subscribe: (callback: (event: LiveEvent) => void) => () => void
+  reset: () => void
+  raiseHighAlert: () => void
+  setAutomaticAlerts: (enabled: boolean) => void
 }

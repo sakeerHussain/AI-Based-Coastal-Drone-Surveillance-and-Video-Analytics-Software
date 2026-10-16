@@ -1,14 +1,12 @@
 import { useEffect, useId, useRef, useState } from 'react'
-import { incidentEvidence } from '../../../mocks/incidents/evidence'
 import { createEvidenceManifest, downloadEvidenceManifest } from '../manifest'
-import type { Incident } from '../types'
+import type { Incident, EvidencePack } from '../types'
 
 const focus = 'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sea'
-export function EvidenceDialog({ incident, onClose }: { incident: Incident; onClose: () => void }) {
+export function EvidenceDialog({ incident, evidence, onClose }: { incident: Incident; evidence: EvidencePack; onClose: () => void }) {
   const dialog = useRef<HTMLDialogElement>(null)
   const headingId = useId()
   const [error, setError] = useState(false)
-  const evidence = incidentEvidence[incident.id]
   useEffect(() => {
     const element = dialog.current!
     const previous = document.activeElement

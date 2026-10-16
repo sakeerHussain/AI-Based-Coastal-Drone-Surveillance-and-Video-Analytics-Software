@@ -12,7 +12,7 @@ const coreActions: ViewAction[] = [
 ]
 const allActions: ViewAction[] = [...coreActions, 'view:zones-rules', 'view:models']
 type ModelAction = 'models:request-promotion' | 'models:record-approval' | 'models:request-class'
-export type Action = ViewAction | ModelAction
+export type Action = ViewAction | ModelAction | 'demo:reset'
 const modelActions: Record<Role, readonly ModelAction[]> = {
   operator: [], analyst: [],
   supervisor: ['models:request-promotion', 'models:request-class'],
@@ -27,6 +27,7 @@ const roleActions: Record<Role, readonly ViewAction[]> = {
 
 export function can(user: { role: Role } | null, action: Action): boolean {
   if (!user) return false
+  if (action === 'demo:reset') return user.role === 'supervisor' || user.role === 'administrator'
   const actions: readonly Action[] = [...roleActions[user.role], ...modelActions[user.role]]
   return actions.includes(action)
 }

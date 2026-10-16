@@ -1,75 +1,42 @@
-# React + TypeScript + Vite
+# Coastal Watch
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Coastal Drone Surveillance console demo for Kerala Police, built with React, Vite, TypeScript and Tailwind CSS v4.
 
-Currently, two official plugins are available:
+Read `AGENTS.md` and `docs/00_START_HERE.md` before making changes. The visual reference is `docs/reference/coastal-drone-mock.html`.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Run locally
 
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+```sh
+npm i
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
+The app uses MSW fixture endpoints and a shared fake live-data emitter. No real authentication, video streams or production services are connected.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Demo controls
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+- Sign in with the prefilled demo fields and choose a role. The form checks required fields and six verification digits; it does not authenticate against a server.
+- Press **P** to toggle presenter mode. Use the left and right arrow keys, or select a step in the bottom bar, to navigate.
+- Presenter shortcuts ignore editable fields, open dialogs and chart editing controls. Role permissions remain enforced.
+- The **Alert raised** step raises the high alert immediately. Automatic alert delivery is suspended while presenter mode is enabled.
+- Supervisors and administrators can choose **Reset demo** in the top bar. This clears session changes, audit records, local screen state and live-data timers, then returns to sign-in.
+- Demo state is held in memory and does not survive a full reload.
 
+## Checks
+
+```sh
+npm run lint
+npm run typecheck
+npm run build
 ```
+
+No test runner dependency is installed. Browser verification covers the demo flows, keyboard interactions, text contrast and responsive layouts at 1366px and 1920px.
+
+## Project layout
+
+- `src/app`: routes, providers, application shell and presenter controls.
+- `src/features`: auth, watch floor, feed wall, incidents, zones and rules, models and health. Features expose public exports through `index.ts`.
+- `src/components`, `src/hooks`, `src/lib`: reusable UI, data access and shared state.
+- `src/mocks`: all demo fixtures, MSW handlers and simulation settings.
+
+Use the existing tokens in `src/index.css`; do not change that file for screen work. Keep authored files below 200 lines. The generated `package-lock.json` is exempt from the line limit.

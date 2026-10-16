@@ -6,6 +6,7 @@ import type { ChartPosition } from '../../../components/chart'
 import type { Rule, Zone, ZoneType, ZonesRulesData } from '../types'
 
 interface ZonesRulesState extends ZonesRulesData {
+  reset: () => void
   loaded: boolean
   selectedId: string
   drafts: Record<string, Rule>
@@ -20,6 +21,7 @@ interface ZonesRulesState extends ZonesRulesData {
 }
 const tones = { 'Restricted area': 'red', 'Crowd monitoring': 'amber', 'Harbour monitoring': 'sea' } as const
 export const useZonesRulesStore = create<ZonesRulesState>((set, get) => ({
+  reset: () => set(useZonesRulesStore.getInitialState(), true),
   zones: [], rules: {}, drafts: {}, loaded: false, selectedId: '', toast: null,
   hydrate: (data) => {
     if (get().loaded) return

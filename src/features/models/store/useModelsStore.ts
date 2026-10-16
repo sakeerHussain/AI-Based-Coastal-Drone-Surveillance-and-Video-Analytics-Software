@@ -5,6 +5,7 @@ import type { AuthUser } from '../../auth'
 import type { ModelRecord, ModelsData } from '../types'
 
 interface ModelsState {
+  reset: () => void
   models: ModelRecord[]
   loaded: boolean
   selectedId: string
@@ -19,6 +20,7 @@ interface ModelsState {
   dismissToast: () => void
 }
 export const useModelsStore = create<ModelsState>((set, get) => ({
+  reset: () => set(useModelsStore.getInitialState(), true),
   models: [], loaded: false, selectedId: '', requestedClasses: [], pendingClasses: [], toast: null,
   hydrate: (data) => {
     if (get().loaded) return

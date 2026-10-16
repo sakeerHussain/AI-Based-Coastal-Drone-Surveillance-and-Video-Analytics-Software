@@ -1,13 +1,18 @@
 import { Link } from 'react-router-dom'
-import { incidentRecords } from '../../../mocks/incidents/records'
+import { useIncidentsData } from '../api/incidents'
 import { formatIstTime } from '../../../lib/time'
 import { useIncidentsStore } from '../store/useIncidentsStore'
 
 const bars = { high: 'border-red', medium: 'border-amber', info: 'border-green' }
 const labels = { high: 'High', medium: 'Medium', info: 'Info' }
 export function IncidentListPage() {
+  const query = useIncidentsData()
   const acknowledged = useIncidentsStore((state) => state.acknowledged)
-  const incidents = Object.values(incidentRecords).sort((a, b) => b.detectedAt - a.detectedAt)
+  if (query.isError) return <div role="alert" className="p-4 text-sm">Could not load incidents.
+    <button type="button" onClick={() => void query.refetch()}
+      className="ml-3 underline focus-visible:outline-2 focus-visible:outline-sea">Try again</button></div>
+  if (!query.ready) return <p role="status" className="p-4 text-sm">Loading incidents…</p>
+  const incidents = Object.values(query.data!.records).sort((a, b) => b.detectedAt - a.detectedAt)
   return (
     <section className="p-4" aria-labelledby="incident-list-title">
       <h1 id="incident-list-title" className="text-lg font-bold">Incidents</h1>

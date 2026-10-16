@@ -1,28 +1,28 @@
 import { useState } from 'react'
 import type { Map } from 'maplibre-gl'
-import { ChartMap, type ChartData } from '../../../components/chart'
-import { chartBounds, land, coastline, flightTracks, detections, places } from '../../../mocks/watch-floor/chart'
-import { zones, zoneLabels } from '../../../mocks/watch-floor/zones'
-import { drones } from '../../../mocks/watch-floor/drones'
+import { ChartMap } from '../../../components/chart'
+import { useSurveillanceData } from '../../../lib/useSurveillanceData'
 import { useWatchFloorMap } from '../hooks/useWatchFloorMap'
 import { useWatchFloorStore } from '../store/useWatchFloorStore'
 import { ChartControls } from './ChartControls'
 import { ChartLegend } from './ChartLegend'
 
-const chartData: ChartData = {
-  bounds: chartBounds, land, coastline, flightTracks, detections, places, zones, zoneLabels, drones,
-}
-
 export function ChartPanel() {
+  const query = useSurveillanceData()
   const [map, setMap] = useState<Map | null>(null)
   const layers = useWatchFloorStore((state) => state.layers)
   const selectedDroneId = useWatchFloorStore((state) => state.selectedDroneId)
   const alerts = useWatchFloorStore((state) => state.alerts)
-  useWatchFloorMap(map)
+  useWatchFloorMap(map, query.data?.drones)
   return (
     <section aria-label="Coastal chart" className="relative min-h-[420px] border-b border-line bg-shoal xl:border-r xl:border-b-0">
-      <ChartMap data={chartData} layers={layers} selectedDroneId={selectedDroneId}
-        alerts={alerts} onReady={setMap} />
+      {query.data && <ChartMap data={query.data.chart} layers={layers} selectedDroneId={selectedDroneId}
+        alerts={alerts} onReady={setMap} />}
+      {!query.data && <p role={query.isError ? 'alert' : 'status'} className="p-4 text-sm">
+        {query.isError ? 'Could not load the chart.' : 'Loading chart…'}
+        {query.isError && <button type="button" onClick={() => void query.refetch()}
+          className="ml-3 underline focus-visible:outline-2 focus-visible:outline-sea">Try again</button>}
+      </p>}
       <ChartControls />
       <ChartLegend />
     </section>

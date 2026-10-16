@@ -4,6 +4,7 @@ import { defaultDroneId } from '../../../mocks/watch-floor/drones'
 import type { LayerVisibility } from '../types'
 
 interface WatchFloorState {
+  reset: () => void
   selectedDroneId: string
   alerts: LiveAlert[]
   telemetry: Record<string, Telemetry>
@@ -15,13 +16,15 @@ interface WatchFloorState {
   dismissToast: () => void
 }
 export const useWatchFloorStore = create<WatchFloorState>((set) => ({
+  reset: () => set(useWatchFloorStore.getInitialState(), true),
   selectedDroneId: defaultDroneId, alerts: [], telemetry: {}, toast: null,
   layers: { zones: true, tracks: true, detections: true },
   selectDrone: (selectedDroneId) => set({ selectedDroneId }),
   toggleLayer: (layer) => set((state) => ({ layers: { ...state.layers, [layer]: !state.layers[layer] } })),
   dismissToast: () => set({ toast: null }),
   receive: (event) => set((state) => {
-    if (event.type === 'snapshot') return { alerts: event.alerts, telemetry: event.telemetry }
+    if (event.type === 'snapshot') return { alerts: event.alerts, telemetry: event.telemetry,
+      toast: event.alerts.find((alert) => alert.severity === 'high' && !state.alerts.some((item) => item.id === alert.id)) ?? null }
     if (event.type === 'telemetry') return { telemetry: event.telemetry }
     if (event.type !== 'alert') return state
     if (state.alerts.some((alert) => alert.id === event.alert.id)) return state
