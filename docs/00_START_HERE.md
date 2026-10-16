@@ -62,3 +62,11 @@ Avoid: gradient washes, identical rounded card grids, glow, emoji, "AI sparkle" 
 10. Edge inference option for weak links (already in the proposal stack).
 11. Privacy masking of faces outside zones.
 12. Offline-tolerant tablet view for field officers.
+
+## 7. Visual reference decisions (see docs/inspiration/NOTES.md)
+- Our look stays light, chart-style, with the left severity bar. Dark
+  theme is a later, separate round.
+- From the references we adopt layout ideas only: map with bottom
+  drawer, pill zone labels, feed tile header and footer, health
+  sparklines, engine status list.
+- Never copy branding, glow, glass panels, donut gauges or icons.
