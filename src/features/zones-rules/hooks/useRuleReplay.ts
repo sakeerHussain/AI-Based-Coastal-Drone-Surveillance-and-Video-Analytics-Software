@@ -24,5 +24,6 @@ export function useRuleReplay(rule: Rule) {
     }, replaySettings.durationMs)
   }
   const current = replay?.key === key ? replay : null
-  return { run, busy: current !== null && current.result === null, result: current?.result ?? null, progress: current?.progress ?? 0 }
+  return { run, busy: current !== null && current.result === null, result: current?.result ?? null,
+    progress: current?.progress ?? 0, stale: replay !== null && replay.key !== key }
 }

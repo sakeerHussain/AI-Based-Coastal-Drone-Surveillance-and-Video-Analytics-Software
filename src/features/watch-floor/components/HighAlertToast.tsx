@@ -11,11 +11,11 @@ export function HighAlertToast() {
     return () => clearTimeout(timer)
   }, [toast, dismiss])
   return (
-    <div role="status" aria-live="polite" aria-atomic="true" className="pointer-events-none fixed top-16 right-4 z-50 max-w-xs">
-      {toast && <div className="pointer-events-auto rounded bg-ink px-4 py-3 text-sm text-paper shadow-lg">
+    <div role="status" aria-live="polite" aria-atomic="true" className="shrink-0">
+      {toast && <div className="border-b border-line border-l-4 border-l-red bg-paper px-4 py-3 text-sm text-ink">
         <p>High alert: {toast.title}</p>
         <button type="button" onClick={dismiss}
-          className="mt-2 underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-paper">
+          className="mt-2 underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sea">
           Dismiss
         </button>
       </div>}

@@ -2,7 +2,7 @@ import { useRuleReplay } from '../hooks/useRuleReplay'
 import type { Rule } from '../types'
 
 export function RuleReplay({ rule, validate }: { rule: Rule; validate: () => boolean }) {
-  const { run, busy, result, progress } = useRuleReplay(rule)
+  const { run, busy, result, progress, stale } = useRuleReplay(rule)
   return <div className="mt-4 text-xs">
     <button type="button" disabled={busy} onClick={() => { if (validate()) run() }}
       className="w-full rounded border border-line px-3 py-2 text-sm font-semibold text-sea focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sea disabled:opacity-50">
@@ -16,7 +16,8 @@ export function RuleReplay({ rule, validate }: { rule: Rule; validate: () => boo
           <div className="h-full bg-sea" style={{ width: `${progress}%` }} />
         </div>
       </> : result !== null ? <p>This rule would have raised {result} alerts.</p>
-        : <p>Test this rule on the last 7 days of footage before saving.</p>}
+        : stale ? <p>Rule changed. Run the test again.</p>
+          : <p>Test this rule on the last 7 days of footage before saving.</p>}
     </div>
     <p className="mt-1 text-mute">Simulated replay using demo data.</p>
   </div>

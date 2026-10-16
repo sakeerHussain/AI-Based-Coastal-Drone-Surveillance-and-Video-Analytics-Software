@@ -13,9 +13,9 @@ export function WatchFloorPage() {
       <aside aria-label="Live monitoring" className="flex min-h-0 flex-col bg-panel">
         <LiveFeedPanel />
         <TelemetryStrip />
+        <HighAlertToast />
         <AlertQueue />
       </aside>
-      <HighAlertToast />
     </div>
   )
 }

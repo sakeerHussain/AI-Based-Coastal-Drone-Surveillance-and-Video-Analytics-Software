@@ -6,6 +6,8 @@ import { useAuthStore } from '../hooks/useAuthStore'
 import type { Role } from '../../../lib/permissions'
 import { RoleSelector } from './RoleSelector'
 import { VerificationCode } from './VerificationCode'
+import { FormErrorSummary } from '../../../components/FormErrorSummary'
+import { focusFirstInvalid } from '../../../lib/focusFirstInvalid'
 
 const schema = z.object({
   policeId: z.string().trim().min(1, 'Enter your police ID.'),
@@ -21,18 +23,19 @@ export function SignInForm() {
   const [policeId, setPoliceId] = useState(demoCredentials.policeId)
   const [password, setPassword] = useState(demoCredentials.password)
   const [digits, setDigits] = useState([...demoCredentials.code])
-  const [attempted, setAttempted] = useState(false)
+  const [attempt, setAttempt] = useState(0)
   const result = schema.safeParse({ policeId, password, code: digits.join('') })
-  const errors = attempted && !result.success ? Object.fromEntries(result.error.issues.map((issue) => [issue.path[0], issue.message])) : {}
+  const errors = attempt > 0 && !result.success ? Object.fromEntries(result.error.issues.map((issue) => [issue.path[0], issue.message])) : {}
   return <form noValidate className="w-full max-w-sm" onSubmit={(event) => {
-    event.preventDefault(); setAttempted(true)
-    if (!result.success) return
+    event.preventDefault(); setAttempt((value) => value + 1)
+    if (!result.success) { focusFirstInvalid(event.currentTarget); return }
     signIn(role, result.data.policeId)
     void navigate('/watch-floor')
   }}>
     <h1 className="text-lg font-bold">Sign in to Coastal Watch</h1>
     <p className="mt-1 text-sm text-mute">Your role decides what you can view, export and change.</p>
     <RoleSelector value={role} onChange={setRole} />
+    <FormErrorSummary count={Object.keys(errors).length} attempt={attempt} />
     <label htmlFor={`${id}-police`} className="mt-4 block text-sm font-medium">Police ID</label>
     <input id={`${id}-police`} value={policeId} onChange={(event) => setPoliceId(event.target.value)}
       autoComplete="username" aria-invalid={!!errors.policeId} aria-describedby={errors.policeId ? `${id}-police-error` : undefined} className={field} />

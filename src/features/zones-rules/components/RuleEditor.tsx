@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useAuthStore } from '../../auth'
 import { ruleOptions } from '../../../mocks/zones-rules/fixtures'
 import { useZonesRulesStore } from '../store/useZonesRulesStore'
@@ -6,17 +6,23 @@ import { validateRule } from '../ruleSchema'
 import type { Rule, RuleErrors, Zone } from '../types'
 import { RuleSelect } from './RuleSelect'
 import { RuleReplay } from './RuleReplay'
+import { RuleSaveStatus } from './RuleSaveStatus'
+import { FormErrorSummary } from '../../../components/FormErrorSummary'
+import { focusFirstInvalid } from '../../../lib/focusFirstInvalid'
 
 export function RuleEditor({ zone, zones, rule }: { zone: Zone; zones: Zone[]; rule: Rule }) {
-  const [attempted, setAttempted] = useState(false)
+  const [attempt, setAttempt] = useState(0)
+  const form = useRef<HTMLFormElement>(null)
   const edit = useZonesRulesStore((state) => state.editRule)
   const save = useZonesRulesStore((state) => state.saveRule)
   const select = useZonesRulesStore((state) => state.select)
   const user = useAuthStore((state) => state.user)
-  const errors: RuleErrors = attempted ? validateRule(rule, zones.map((item) => item.id)) : {}
+  const errors: RuleErrors = attempt > 0 ? validateRule(rule, zones.map((item) => item.id)) : {}
   function validate() {
-    setAttempted(true)
-    return Object.keys(validateRule(rule, zones.map((item) => item.id))).length === 0
+    setAttempt((value) => value + 1)
+    const valid = Object.keys(validateRule(rule, zones.map((item) => item.id))).length === 0
+    if (!valid) focusFirstInvalid(form.current)
+    return valid
   }
   function field(key: keyof typeof ruleOptions, label: string) {
     return <RuleSelect label={label} value={rule[key]} options={ruleOptions[key]} error={errors[key]}
@@ -24,11 +30,13 @@ export function RuleEditor({ zone, zones, rule }: { zone: Zone; zones: Zone[]; r
   }
   return <aside className="min-w-0 bg-panel p-4">
     <h2 className="font-bold">Rule for {zone.id}</h2>
+    <RuleSaveStatus zoneId={zone.id} rule={rule} />
     <p className="mt-1 text-sm text-mute">Written as a sentence. No code needed.</p>
-    <form noValidate onSubmit={(event) => {
+    <form ref={form} noValidate onSubmit={(event) => {
       event.preventDefault()
       if (validate() && user) save(zone.id, user.name)
     }}>
+      <FormErrorSummary count={Object.keys(errors).length} attempt={attempt} />
       <div className="mt-4 text-[15px] leading-9">
         Raise an alert when a {field('object', 'Object')} stays inside{' '}
         <RuleSelect label="Rule zone" value={rule.zoneId} options={zones.map((item) => item.id)} error={errors.zoneId}

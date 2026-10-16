@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import { defaultRule } from '../../../mocks/zones-rules/fixtures'
 import { useAuditStore } from '../../../lib/useAuditStore'
+import { currentTime } from '../../../lib/time'
 import { validateRule } from '../ruleSchema'
 import type { ChartPosition } from '../../../components/chart'
 import type { Rule, Zone, ZoneType, ZonesRulesData } from '../types'
@@ -10,6 +11,7 @@ interface ZonesRulesState extends ZonesRulesData {
   loaded: boolean
   selectedId: string
   drafts: Record<string, Rule>
+  savedAt: Record<string, number>
   toast: string | null
   hydrate: (data: ZonesRulesData) => void
   select: (id: string) => void
@@ -22,7 +24,7 @@ interface ZonesRulesState extends ZonesRulesData {
 const tones = { 'Restricted area': 'red', 'Crowd monitoring': 'amber', 'Harbour monitoring': 'sea' } as const
 export const useZonesRulesStore = create<ZonesRulesState>((set, get) => ({
   reset: () => set(useZonesRulesStore.getInitialState(), true),
-  zones: [], rules: {}, drafts: {}, loaded: false, selectedId: '', toast: null,
+  zones: [], rules: {}, drafts: {}, savedAt: {}, loaded: false, selectedId: '', toast: null,
   hydrate: (data) => {
     if (get().loaded) return
     set({ ...structuredClone(data), drafts: structuredClone(data.rules), loaded: true, selectedId: data.zones[0].id })
@@ -38,7 +40,8 @@ export const useZonesRulesStore = create<ZonesRulesState>((set, get) => ({
       actor, action: 'Rule saved', entityId: id,
       before: state.rules[id] ? { ...state.rules[id] } : null, after: { ...saved },
     })
-    set({ rules: { ...state.rules, [id]: saved }, toast: `Rule for ${id} saved. Change logged in audit.` })
+    set({ rules: { ...state.rules, [id]: saved }, savedAt: { ...state.savedAt, [id]: currentTime() },
+      toast: `Rule for ${id} saved. Change logged in audit.` })
     return true
   },
   addZone: (name, type, points) => set((state) => {

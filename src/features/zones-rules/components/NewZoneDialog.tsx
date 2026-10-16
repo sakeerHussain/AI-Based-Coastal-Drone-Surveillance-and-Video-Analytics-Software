@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from 'react'
 import { zoneTypes } from '../../../mocks/zones-rules/fixtures'
 import { newZoneSchema } from '../ruleSchema'
 import type { ZoneType } from '../types'
+import { FormErrorSummary } from '../../../components/FormErrorSummary'
+import { focusFirstInvalid } from '../../../lib/focusFirstInvalid'
 
 const focus = 'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sea'
 export function NewZoneDialog({ onSave, onClose }: {
@@ -11,6 +13,7 @@ export function NewZoneDialog({ onSave, onClose }: {
   const [name, setName] = useState('')
   const [type, setType] = useState('')
   const [errors, setErrors] = useState<Record<string, string>>({})
+  const [attempt, setAttempt] = useState(0)
   useEffect(() => {
     const element = dialog.current!
     const previous = document.activeElement
@@ -22,11 +25,17 @@ export function NewZoneDialog({ onSave, onClose }: {
     className="fixed inset-0 m-auto w-[calc(100%_-_2rem)] max-w-md rounded border border-line bg-panel p-5 text-ink backdrop:bg-ink/40">
     <form noValidate onSubmit={(event) => {
       event.preventDefault()
+      setAttempt((value) => value + 1)
       const result = newZoneSchema.safeParse({ name, type })
-      if (!result.success) { setErrors(Object.fromEntries(result.error.issues.map((issue) => [issue.path[0], issue.message]))); return }
+      if (!result.success) {
+        setErrors(Object.fromEntries(result.error.issues.map((issue) => [issue.path[0], issue.message])))
+        focusFirstInvalid(event.currentTarget)
+        return
+      }
       onSave(result.data.name, result.data.type)
     }}>
       <h2 id="new-zone-title" className="font-bold">Name your zone</h2>
+      <FormErrorSummary count={Object.keys(errors).length} attempt={attempt} />
       <label className="mt-4 block text-sm" htmlFor="zone-name">Zone name</label>
       <input id="zone-name" value={name} onChange={(event) => setName(event.target.value)}
         aria-invalid={!!errors.name} aria-describedby={errors.name ? 'zone-name-error' : undefined}
