@@ -8,6 +8,8 @@ import { ModelsAndHealthPage } from '../features/models'
 import { ArchivePage } from '../features/archive'
 import { ReportsPage } from '../features/reports'
 import { UsersAndAuditPage } from '../features/admin'
+import { VideoSourcesPage } from '../features/video-sources'
+import { FleetPage } from '../features/fleet'
 import { AppShell } from './layout/AppShell'
 import { RequirePermission } from './layout/RequirePermission'
 import { DemoLayout } from './demo/DemoLayout'
@@ -27,6 +29,8 @@ export const router = createBrowserRouter([{ element: <DemoLayout />, children: 
       { path: '/archive', element: <RequirePermission action="view:archive"><ArchivePage /></RequirePermission> },
       { path: '/reports', element: <RequirePermission action="view:reports"><ReportsPage /></RequirePermission> },
       { path: '/users-audit', element: <RequirePermission action="view:users-audit"><UsersAndAuditPage /></RequirePermission> },
+      { path: '/video-sources', element: <RequirePermission action="view:video-sources"><VideoSourcesPage /></RequirePermission> },
+      { path: '/fleet', element: <RequirePermission action="view:fleet"><FleetPage /></RequirePermission> },
     ],
   },
 ] }])

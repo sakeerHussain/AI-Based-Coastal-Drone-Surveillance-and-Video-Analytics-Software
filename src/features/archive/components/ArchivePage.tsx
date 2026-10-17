@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import type { Incident } from '../../incidents'
 import { formatIstTime } from '../../../lib/time'
 
@@ -11,7 +11,11 @@ const istDate = (value: number) => new Date(value + 330 * 60_000).toISOString().
 
 export function ArchivePage() {
   const [search, setSearch] = useState('')
-  const [drone, setDrone] = useState('')
+  const [params, setParams] = useSearchParams()
+  const drone = params.get('drone') ?? ''
+  function setDrone(id: string) {
+    setParams((previous) => { const next = new URLSearchParams(previous); if (id) next.set('drone', id); else next.delete('drone'); return next })
+  }
   const [severity, setSeverity] = useState('')
   const [date, setDate] = useState('')
   const query = useQuery({
@@ -52,7 +56,7 @@ export function ArchivePage() {
           <input type="search" value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Title, drone or station" className={field} /></label>
         <label className="grid gap-1 text-xs text-mute">Drone
           <select value={drone} onChange={(event) => setDrone(event.target.value)} className={field}>
-            <option value="">All drones</option>{[...new Set(records.map((record) => record.droneId))].sort().map((id) => <option key={id}>{id}</option>)}
+            <option value="">All drones</option>{[...new Set([...records.map((record) => record.droneId), ...(drone ? [drone] : [])])].sort().map((id) => <option key={id}>{id}</option>)}
           </select></label>
         <label className="grid gap-1 text-xs text-mute">Severity
           <select value={severity} onChange={(event) => setSeverity(event.target.value)} className={field}>

@@ -4,6 +4,8 @@ import { useIncidentsStore } from '../../features/incidents'
 import { useZonesRulesStore } from '../../features/zones-rules'
 import { useModelsStore } from '../../features/models'
 import { useFeedWallStore } from '../../features/feed-wall'
+import { useAdminStore } from '../../features/admin'
+import { useSourcesStore } from '../../features/video-sources'
 import { useAuditStore } from '../../lib/useAuditStore'
 import { useLiveDataStore } from '../../lib/useLiveDataStore'
 import { queryClient, useDemoStore } from '../../lib/useDemoStore'
@@ -18,6 +20,8 @@ export function resetDemo(user: AuthUser | null): boolean {
   useZonesRulesStore.getState().reset()
   useModelsStore.getState().reset()
   useFeedWallStore.getState().reset()
+  useAdminStore.getState().reset()
+  useSourcesStore.getState().reset()
   useAuditStore.getState().reset()
   useLiveDataStore.getState().reset()
   useAuthStore.getState().reset()
