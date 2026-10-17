@@ -10,6 +10,7 @@ import { ReportsPage } from '../features/reports'
 import { UsersAndAuditPage } from '../features/admin'
 import { VideoSourcesPage } from '../features/video-sources'
 import { FleetPage } from '../features/fleet'
+import { DatasetsPage } from '../features/datasets'
 import { AppShell } from './layout/AppShell'
 import { RequirePermission } from './layout/RequirePermission'
 import { DemoLayout } from './demo/DemoLayout'
@@ -31,6 +32,7 @@ export const router = createBrowserRouter([{ element: <DemoLayout />, children: 
       { path: '/users-audit', element: <RequirePermission action="view:users-audit"><UsersAndAuditPage /></RequirePermission> },
       { path: '/video-sources', element: <RequirePermission action="view:video-sources"><VideoSourcesPage /></RequirePermission> },
       { path: '/fleet', element: <RequirePermission action="view:fleet"><FleetPage /></RequirePermission> },
+      { path: '/datasets', element: <RequirePermission action="view:datasets"><DatasetsPage /></RequirePermission> },
     ],
   },
 ] }])

@@ -14,6 +14,7 @@ interface ModelsState {
   toast: string | null
   hydrate: (data: ModelsData) => void
   select: (id: string) => void
+  registerCandidate: (model: ModelRecord, authorizedBy: AuthUser | null) => void
   requestPromotion: (user: AuthUser | null) => void
   approve: (user: AuthUser | null) => void
   requestClass: (name: string, user: AuthUser | null) => void
@@ -28,6 +29,10 @@ export const useModelsStore = create<ModelsState>((set, get) => ({
       selectedId: data.models.find((model) => model.stage === 'Staging')?.id ?? data.models[0]?.id ?? '' })
   },
   select: (selectedId) => set({ selectedId }),
+  registerCandidate: (model, authorizedBy) => {
+    if (!can(authorizedBy, 'training:authorize') || !get().loaded || get().models.some((item) => item.id === model.id) || model.stage !== 'Staging') return
+    set({ models: [...get().models, structuredClone(model)] })
+  },
   requestPromotion: (user) => {
     if (!can(user, 'models:request-promotion')) return
     const state = get(), model = state.models.find((item) => item.id === state.selectedId)

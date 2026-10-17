@@ -1,4 +1,5 @@
 const paths: Record<string, string> = {
+  '/datasets': 'M4 3h16v18H4z M7 7h10 M7 11h4 M7 15h10 M7 18h6',
   '/watch-floor': 'M3 5h18v12H3z M8 21h8 M12 17v4 M7 11l3-3 4 5 3-3',
   '/feed-wall': 'M3 3h7v7H3z M14 3h7v7h-7z M3 14h7v7H3z M14 14h7v7h-7z',
   '/incidents': 'M12 3 2 21h20L12 3z M12 9v5 M12 17v1',

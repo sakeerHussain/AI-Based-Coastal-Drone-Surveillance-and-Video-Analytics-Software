@@ -10,6 +10,7 @@ import { SystemHealthPanel } from './SystemHealthPanel'
 import { AuditList } from './AuditList'
 import { ModelToast } from './ModelToast'
 import { ModelsHealthSummary } from './ModelsHealthSummary'
+import { TrainingWorkflow } from './TrainingWorkflow'
 
 const ModelsHealthCharts = lazy(() => import('./ModelsHealthCharts'))
 
@@ -47,6 +48,7 @@ export function ModelsAndHealthPage() {
       <Suspense fallback={<p role="status" className="min-h-[232px] rounded border border-line bg-panel p-4 text-sm text-mute">Loading model and health analytics…</p>}>
         <ModelsHealthCharts />
       </Suspense>
+      <TrainingWorkflow config={query.data.training} />
       <div className="grid items-start gap-3 xl:grid-cols-2">
         <div className="min-w-0 rounded border border-line bg-panel px-4 pb-4 [&>section]:mt-4">
           <DatasetRequests dataset={query.data.dataset} />
@@ -56,7 +58,7 @@ export function ModelsAndHealthPage() {
         </div>
       </div>
     </div>
-    {comparing && <CompareModelsDialog versions={query.data.versions} defaults={query.data.comparisonDefaults} onClose={() => setComparing(false)} />}
+    {comparing && <CompareModelsDialog versions={[...query.data.versions, ...models.filter((model) => !query.data.versions.some((version) => version.id === model.id))]} defaults={query.data.comparisonDefaults} onClose={() => setComparing(false)} />}
     <ModelToast />
   </>
 }

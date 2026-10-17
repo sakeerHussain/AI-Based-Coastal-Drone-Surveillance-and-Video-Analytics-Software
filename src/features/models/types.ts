@@ -1,3 +1,4 @@
+import type { TrainingConfig } from './trainingTypes'
 export type ModelStage = 'Production' | 'Staging' | 'Awaiting approval'
 export interface ModelVersion {
   id: string
@@ -12,6 +13,7 @@ export interface Dataset {
   pendingClasses: string[]
 }
 export interface ModelsData {
+  training: TrainingConfig
   models: ModelRecord[]
   versions: ModelVersion[]
   dataset: Dataset

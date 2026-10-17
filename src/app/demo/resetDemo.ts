@@ -2,7 +2,8 @@ import { useAuthStore, type AuthUser } from '../../features/auth'
 import { useWatchFloorStore } from '../../features/watch-floor'
 import { useIncidentsStore } from '../../features/incidents'
 import { useZonesRulesStore } from '../../features/zones-rules'
-import { useModelsStore } from '../../features/models'
+import { useModelsStore, useTrainingStore } from '../../features/models'
+import { useDatasetsStore } from '../../features/datasets'
 import { useFeedWallStore } from '../../features/feed-wall'
 import { useAdminStore } from '../../features/admin'
 import { useSourcesStore } from '../../features/video-sources'
@@ -19,6 +20,8 @@ export function resetDemo(user: AuthUser | null): boolean {
   useIncidentsStore.getState().reset()
   useZonesRulesStore.getState().reset()
   useModelsStore.getState().reset()
+  useTrainingStore.getState().reset()
+  useDatasetsStore.getState().reset()
   useFeedWallStore.getState().reset()
   useAdminStore.getState().reset()
   useSourcesStore.getState().reset()

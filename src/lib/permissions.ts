@@ -11,13 +11,15 @@ export type ViewAction =
   | 'view:users-audit'
   | 'view:video-sources'
   | 'view:fleet'
+  | 'view:datasets'
 
 const coreActions: ViewAction[] = [
   'view:watch-floor', 'view:feed-wall', 'view:incidents', 'view:archive', 'view:reports', 'view:video-sources', 'view:fleet',
 ]
-const allActions: ViewAction[] = [...coreActions, 'view:zones-rules', 'view:models', 'view:users-audit']
+const allActions: ViewAction[] = [...coreActions, 'view:zones-rules', 'view:models', 'view:users-audit', 'view:datasets']
 type ModelAction = 'models:request-promotion' | 'models:record-approval' | 'models:request-class'
 export type Action = ViewAction | ModelAction | 'demo:reset' | 'users:manage' | 'sources:manage'
+  | 'datasets:annotate' | 'datasets:manage' | 'training:request' | 'training:authorize'
 const modelActions: Record<Role, readonly ModelAction[]> = {
   operator: [], analyst: [],
   supervisor: ['models:request-promotion', 'models:request-class'],
@@ -25,13 +27,16 @@ const modelActions: Record<Role, readonly ModelAction[]> = {
 }
 const roleActions: Record<Role, readonly ViewAction[]> = {
   operator: coreActions,
-  analyst: [...coreActions, 'view:zones-rules'],
+  analyst: [...coreActions, 'view:zones-rules', 'view:datasets'],
   supervisor: allActions,
   administrator: allActions,
 }
 
 export function can(user: { role: Role } | null, action: Action): boolean {
   if (!user) return false
+  if (action === 'datasets:annotate') return user.role !== 'operator'
+  if (action === 'datasets:manage' || action === 'training:request') return user.role === 'supervisor' || user.role === 'administrator'
+  if (action === 'training:authorize') return user.role === 'administrator'
   if (action === 'users:manage') return user.role === 'administrator'
   if (action === 'sources:manage') return user.role === 'supervisor' || user.role === 'administrator'
   if (action === 'demo:reset') return user.role === 'supervisor' || user.role === 'administrator'
@@ -50,6 +55,11 @@ export const permissionLabels: { action: Action; label: string }[] = [
   { action: 'view:users-audit', label: 'View Users and audit' },
   { action: 'view:video-sources', label: 'View Video sources' },
   { action: 'view:fleet', label: 'View Drone fleet and missions' },
+  { action: 'view:datasets', label: 'View Datasets and annotation' },
+  { action: 'datasets:annotate', label: 'Annotate dataset frames' },
+  { action: 'datasets:manage', label: 'Simulate dataset imports and create versions' },
+  { action: 'training:request', label: 'Request demo training' },
+  { action: 'training:authorize', label: 'Authorize demo training' },
   { action: 'sources:manage', label: 'Configure sources and simulate imports' },
   { action: 'models:request-promotion', label: 'Request model promotion' },
   { action: 'models:record-approval', label: 'Record authority approval' },
