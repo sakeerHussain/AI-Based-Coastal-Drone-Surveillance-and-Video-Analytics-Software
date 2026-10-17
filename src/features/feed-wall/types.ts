@@ -5,6 +5,8 @@ export type FeedLayout = 3 | 2 | 1
 export interface Feed {
   id: string
   title: string
+  resolution: string
+  frameRate: number
   scene: SceneData
   telemetry: Telemetry
   incidentId?: string

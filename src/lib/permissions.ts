@@ -6,11 +6,14 @@ export type ViewAction =
   | 'view:incidents'
   | 'view:zones-rules'
   | 'view:models'
+  | 'view:archive'
+  | 'view:reports'
+  | 'view:users-audit'
 
 const coreActions: ViewAction[] = [
-  'view:watch-floor', 'view:feed-wall', 'view:incidents',
+  'view:watch-floor', 'view:feed-wall', 'view:incidents', 'view:archive', 'view:reports',
 ]
-const allActions: ViewAction[] = [...coreActions, 'view:zones-rules', 'view:models']
+const allActions: ViewAction[] = [...coreActions, 'view:zones-rules', 'view:models', 'view:users-audit']
 type ModelAction = 'models:request-promotion' | 'models:record-approval' | 'models:request-class'
 export type Action = ViewAction | ModelAction | 'demo:reset'
 const modelActions: Record<Role, readonly ModelAction[]> = {

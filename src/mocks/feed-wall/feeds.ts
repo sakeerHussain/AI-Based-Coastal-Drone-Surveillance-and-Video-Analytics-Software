@@ -25,6 +25,7 @@ const definitions = [
 ] as const
 export const feedFixtures: Feed[] = definitions.map(([id, location, variant, incidentId], index) => ({
   id, title: `${id} ${location}`, incidentId,
+  resolution: '1080p', frameRate: 25,
   scene: scenes[id] ?? feedScenes[variant],
   telemetry: initialTelemetry[id] ?? {
     altitude: 90 + index * 2, heading: (120 + index * 17) % 360,

@@ -5,6 +5,9 @@ import { FeedWallPage } from '../features/feed-wall'
 import { IncidentListPage, IncidentReviewPage } from '../features/incidents'
 import { ZonesAndRulesPage } from '../features/zones-rules'
 import { ModelsAndHealthPage } from '../features/models'
+import { ArchivePage } from '../features/archive'
+import { ReportsPage } from '../features/reports'
+import { UsersAndAuditPage } from '../features/admin'
 import { AppShell } from './layout/AppShell'
 import { RequirePermission } from './layout/RequirePermission'
 import { DemoLayout } from './demo/DemoLayout'
@@ -21,6 +24,9 @@ export const router = createBrowserRouter([{ element: <DemoLayout />, children: 
       { path: '/incidents/:id', element: <RequirePermission action="view:incidents"><IncidentReviewPage /></RequirePermission> },
       { path: '/zones-rules', element: <RequirePermission action="view:zones-rules"><ZonesAndRulesPage /></RequirePermission> },
       { path: '/models', element: <RequirePermission action="view:models"><ModelsAndHealthPage /></RequirePermission> },
+      { path: '/archive', element: <RequirePermission action="view:archive"><ArchivePage /></RequirePermission> },
+      { path: '/reports', element: <RequirePermission action="view:reports"><ReportsPage /></RequirePermission> },
+      { path: '/users-audit', element: <RequirePermission action="view:users-audit"><UsersAndAuditPage /></RequirePermission> },
     ],
   },
 ] }])

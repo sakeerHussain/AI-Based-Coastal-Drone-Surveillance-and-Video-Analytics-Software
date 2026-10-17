@@ -17,7 +17,7 @@ export function useMapMarkers(
     if (layers.zones) {
       for (const zone of zoneLabels) labels.push({
         text: `${zone.id} ${zone.name}`, position: zone.position,
-        className: `text-[10px] font-semibold ${tones[zone.tone]}`,
+        className: `rounded-full border border-line bg-panel px-2 py-0.5 text-[10px] font-semibold ${tones[zone.tone]}`,
         priority: 0, anchor: 'bottom-left', offset: [0, -5],
       })
     }

@@ -15,7 +15,9 @@ export function ChartPanel() {
   const alerts = useWatchFloorStore((state) => state.alerts)
   useWatchFloorMap(map, query.data?.drones)
   return (
-    <section aria-label="Coastal chart" className="relative min-h-[420px] border-b border-line bg-shoal xl:border-r xl:border-b-0">
+    <section aria-label="Coastal chart" className="flex min-h-[360px] min-w-0 flex-col overflow-hidden rounded border border-line bg-panel">
+      <ChartControls />
+      <div className="relative min-h-[280px] flex-1 bg-shoal">
       {query.data && <ChartMap data={query.data.chart} layers={layers} selectedDroneId={selectedDroneId}
         alerts={alerts} onReady={setMap} />}
       {!query.data && <p role={query.isError ? 'alert' : 'status'} className="p-4 text-sm">
@@ -23,8 +25,8 @@ export function ChartPanel() {
         {query.isError && <button type="button" onClick={() => void query.refetch()}
           className="ml-3 underline focus-visible:outline-2 focus-visible:outline-sea">Try again</button>}
       </p>}
-      <ChartControls />
       <ChartLegend />
+      </div>
     </section>
   )
 }

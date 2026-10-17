@@ -34,7 +34,7 @@ export function ZoneMap({ zones, zone, map, onReady, drawing }: Props) {
       duration: matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 500,
     })
     map.setPaintProperty('zone-outline', 'line-width', ['case', ['==', ['get', 'id'], selectedId], 3, 1.5])
-    map.setPaintProperty('zone-fill', 'fill-opacity', ['case', ['==', ['get', 'id'], selectedId], 0.18, 0.12])
+    map.setPaintProperty('zone-fill', 'fill-opacity', 0.12)
   }, [map, selectedId])
   return <section aria-label="Zone editing chart" className="relative min-h-[560px] border-b border-line bg-shoal xl:border-r xl:border-b-0">
     {data && <ChartMap data={data} layers={layers} alerts={alerts} onReady={onReady} />}
